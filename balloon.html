@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Thank you, baby — Balloons</title>
+  <style>
+    :root{
+      --bg:#ffeef2;           /* soft pink */
+      --accent:#a80f2f;       /* heading red */
+      --shadow:rgba(0,0,0,.14);
+      --card:#ffffff;
+      --cardText:#333;
+      --string:#7a7a7a;
+      --balloonA:#ff6b81;    /* pink */
+      --balloonB:#ffb84d;    /* orange */
+      --balloonC:#7cd992;    /* green */
+      --balloonD:#7db9ff;    /* blue */
+      --balloonE:#c39bff;    /* purple */
+    }
+    *{box-sizing:border-box}
+    html,body{height:100%;}
+    body{
+      margin:0; overflow:hidden; display:grid; grid-template-rows:auto 1fr auto; place-items:center;
+      font-family: ui-rounded, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, "Apple Color Emoji","Segoe UI Emoji";
+      color:#111;
+      background: var(--bg);
+      position:relative;
+    }
+
+    /* Background: use provided image if present */
+    .bg{
+      position:fixed; inset:0; z-index:-1; background: var(--bg);
+      background-image:url('./assets/balloon_bg.png'); /* Put your provided image here (save it as assets/balloon_bg.png) */
+      background-size:cover; background-position:center; opacity:1; background-repeat:no-repeat;
+      pointer-events:none;
+    }
+    /* Subtle fallback grid if image missing */
+    .bg::after{
+      content:""; position:absolute; inset:0; background-image:
+        linear-gradient(to right, rgba(255,255,255,.35) 1px, transparent 1px),
+        linear-gradient(to bottom, rgba(255,255,255,.35) 1px, transparent 1px);
+      background-size:26px 26px; mix-blend-mode:overlay;
+    }
+
+    header{
+      margin:14px 0 0; font-size:clamp(22px,5.6vw,40px); font-weight:900; color:var(--accent);
+      text-shadow:0 2px 6px rgba(168,15,47,.18);
+    }
+
+    .sky{ position:relative; width:100%; height:100%; overflow:hidden; }
+
+    .clouds{ position:fixed; left:0; right:0; bottom:0; height:34vh; z-index:0; pointer-events:none; }
+    .cloud{ position:absolute; bottom:0; width:220px; height:80px; background:#fff; opacity:.95; border-radius:60px; filter: drop-shadow(0 10px 14px rgba(0,0,0,.12)); }
+    .cloud::before, .cloud::after{ content:""; position:absolute; background:#fff; opacity:.98; border-radius:50%; }
+    .cloud::before{ width:120px; height:120px; left:28px; bottom:26px; }
+    .cloud::after{ width:160px; height:140px; left:95px; bottom:10px; }
+
+    /* positions + slow horizontal drift */
+    .cloud.c1{ left:-40px; animation:cloudDrift 24s ease-in-out infinite alternate; }
+    .cloud.c2{ left:22%;  transform:scale(1.15); animation:cloudDrift 28s ease-in-out infinite alternate-reverse; }
+    .cloud.c3{ left:48%;  transform:scale(1.35); animation:cloudDrift 32s ease-in-out infinite alternate; }
+    .cloud.c4{ left:72%;  transform:scale(1.05); animation:cloudDrift 26s ease-in-out infinite alternate-reverse; }
+    .cloud.c5{ left:88%;  transform:scale(.9);  animation:cloudDrift 22s ease-in-out infinite alternate; }
+
+    @keyframes cloudDrift{ from{ transform:translateX(-14px) scale(var(--sc,1)); } to{ transform:translateX(14px) scale(var(--sc,1)); } }
+
+    /* Balloon */
+    .balloon{ position:absolute; left:50%; transform:translateX(-50%); will-change:transform, opacity; }
+    .balloon svg{ display:block; width: clamp(72px, 18vw, 120px); height:auto; overflow:visible; filter:drop-shadow(0 10px 16px var(--shadow)); }
+    .balloon .card{
+      position:absolute; left:50%; transform:translateX(-50%); top: calc(100% + 54px);
+      width:max-content; max-width: clamp(160px, 45vw, 240px);
+      background:#fffdfd; color:#333; padding:12px 16px; border-radius:12px;
+      box-shadow:0 6px 14px rgba(0,0,0,.15);
+      border:2px solid #ffd6e0;
+      font-size: clamp(14px, 3.6vw, 18px); font-weight:700; text-align:center;
+    }
+
+    /* Back button same vibe as other pages */
+    .back{
+      position:fixed; left:50%; bottom:16px; transform:translateX(-50%);
+      background:#ff84b0; color:#fff; padding:14px 20px; border-radius:999px; text-decoration:none; font-weight:900; border:0;
+      box-shadow:0 10px 24px rgba(255,132,176,.35); min-height:44px;
+    }
+
+    /* Floating animation */
+    @keyframes rise{
+      0%{ transform: translate(var(--x,0), 100vh) scale(var(--s,1)); opacity:0; }
+      10%{ opacity:1; }
+      100%{ transform: translate(calc(var(--x,0) + var(--drift, 0px)), -140vh) scale(var(--s,1)); opacity:0; }
+    }
+    @keyframes sway{
+      from{ transform: rotate(-4deg); } to{ transform: rotate(4deg); }
+    }
+
+    /* Hide scroll bounce on iOS */
+    .sky, .bg { -webkit-overflow-scrolling: auto; }
+  </style>
+</head>
+<body>
+  <div class="bg" aria-hidden="true"></div>
+  <div class="clouds" aria-hidden="true">
+    <span class="cloud c1"></span>
+    <span class="cloud c2"></span>
+    <span class="cloud c3"></span>
+    <span class="cloud c4"></span>
+    <span class="cloud c5"></span>
+  </div>
+  <header>Thank you, baby 💖</header>
+
+  <div class="sky" id="sky"></div>
+
+  <a class="back" href="yes.html">← Back to gifts</a>
+
+  <template id="balloonTpl">
+    <div class="balloon" role="img" aria-label="balloon with message">
+      <svg viewBox="0 0 200 280" xmlns="http://www.w3.org/2000/svg">
+        <!-- Balloon body -->
+        <defs>
+          <linearGradient id="g" x1="0" x2="0" y1="0" y2="1">
+            <stop offset="0%" stop-color="var(--cLight)"/>
+            <stop offset="100%" stop-color="var(--cDark)"/>
+          </linearGradient>
+        </defs>
+        <ellipse cx="100" cy="90" rx="72" ry="82" fill="url(#g)" />
+        <path d="M92 165 L108 165 L100 184 Z" fill="var(--cDark)"/>
+        <!-- string -->
+        <path d="M100 184 C 100 210, 104 220, 100 240 C 96 255, 104 258, 100 280" stroke="var(--string)" stroke-width="2" fill="none" stroke-linecap="round"/>
+      </svg>
+      <div class="card"></div>
+    </div>
+  </template>
+
+  <script>
+    const sky = document.getElementById('sky');
+
+    // Create many balloons instantly on page load (before rendering finishes)
+    document.addEventListener('DOMContentLoaded', () => {
+      for (let i = 0; i < 40; i++) {
+        createBalloon();
+      }
+    });
+
+    const colors = [
+      {light:'#ffa6b4', dark:'var(--balloonA)'},
+      {light:'#ffd089', dark:'var(--balloonB)'},
+      {light:'#a8f0c1', dark:'var(--balloonC)'},
+      {light:'#a9d4ff', dark:'var(--balloonD)'},
+      {light:'#d9c0ff', dark:'var(--balloonE)'}
+    ];
+
+    const messages = [
+      'I love you',
+      'Happy 3 Years! 💗',
+      "You\'re my favourite",
+      'Thank you for everything',
+      'You make me calm',
+      'My best decision',
+      'Forever us',
+      'You + Me = Choshi',
+      'Hugs soon',
+      'Proud of you',
+      'You are my peace',
+    ];
+
+    function createBalloon(){
+      const tpl = document.getElementById('balloonTpl');
+      const node = tpl.content.firstElementChild.cloneNode(true);
+
+      // random color
+      const c = colors[Math.floor(Math.random()*colors.length)];
+      node.style.setProperty('--cLight', c.light);
+      node.style.setProperty('--cDark', getComputedStyle(document.documentElement).getPropertyValue(c.dark.replace('var(','').replace(')','')) || '#ff6b81');
+
+      // random horizontal start and size
+      const x = Math.floor(Math.random()*100 - 50); // -50vw..50vw from center
+      const s = (Math.random()*0.35 + 0.85).toFixed(2); // 0.85 - 1.20
+      const drift = (Math.random()*120-60).toFixed(0)+'px';
+      node.style.setProperty('--x', x+'vw');
+      node.style.setProperty('--s', s);
+      node.style.setProperty('--drift', drift);
+
+      // duration
+      const dur = Math.random()*8 + 8; // 8 - 16s (faster)
+      node.style.animation = `rise ${dur}s linear forwards`;
+
+      // start some balloons mid-way so you see them instantly
+      node.style.animationDelay = (-Math.random()* (dur*0.8)).toFixed(2) + 's';
+
+      // sway the ellipse a little
+      node.querySelector('ellipse').style.animation = 'sway 2.4s ease-in-out infinite alternate';
+
+      // message
+      node.querySelector('.card').textContent = messages[Math.floor(Math.random()*messages.length)];
+
+      // position near bottom initially
+      node.style.bottom = '-20vh'; node.style.top = 'auto';
+
+      // remove at end & spawn a new one so it never stops
+      node.addEventListener('animationend', ()=>{ node.remove(); createBalloon(); });
+
+      // click/tap to rise faster (cute interaction)
+      node.addEventListener('click', ()=> node.style.animationDuration = '6s');
+
+      sky.appendChild(node);
+    }
+
+    // Light initial seed so page doesn't feel empty
+    // for(let i=0;i<6;i++){ setTimeout(createBalloon, i*200); }
+
+    // Burst helper: create many quickly
+    function burst(count=24, gap=40){
+      for(let i=0;i<count;i++) setTimeout(createBalloon, i*gap);
+    }
+
+    // As soon as the user interacts, do a big burst (once)
+    // ['pointerdown','touchstart','click'].forEach(evt => {
+    //   window.addEventListener(evt, () => burst(24, 35), { once:true, passive:true });
+    // });
+
+    // Safety: if no interaction within 2s, auto-burst anyway
+    // setTimeout(() => burst(18, 50), 2000);
+
+    // Keep a steady stream after that
+    setInterval(createBalloon, 500);
+  </script>
+</body>
+</html>
