@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Presents for you</title>
+<style>
+  /* Optional local fonts (same as index.html if you added them) */
+  @font-face { font-family:'Gistecy'; src:url('./fonts/Gistecy.ttf') format('truetype'); font-display:swap; }
+  @font-face { font-family:'Gagalin'; src:url('./fonts/Gagalin.ttf') format('truetype'); font-display:swap; }
+  @font-face { font-family:'Brittany'; src:url('./fonts/Brittany.ttf') format('truetype'); font-display:swap; }
+
+  :root{
+    --accent:#e94b4b;
+    --ink:#111;
+    --card:rgba(255,255,255,.88);
+    --shadow:0 12px 32px rgba(17,17,17,.15);
+    --pink:#ffd6e6;
+  }
+
+  /* soft hearts background like index */
+  body{
+    margin:0; min-height:100svh; display:grid; place-items:center; color:var(--ink);
+    font-family: system-ui,-apple-system,Segoe UI,Roboto,Ubuntu,Cantarell,'Helvetica Neue',Arial,sans-serif;
+    background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='160' height='120' viewBox='0 0 160 120'><rect width='160' height='120' fill='white'/><g fill='%23f9cfe0' opacity='.9'><path d='M20 30c0-7 6-12 12-12 4 0 7 2 9 5 2-3 5-5 9-5 6 0 12 5 12 12 0 16-21 21-21 31 0-10-21-15-21-31z'/><path d='M100 20c0-6 5-10 10-10 3 0 6 2 7 4 2-2 4-4 7-4 5 0 10 4 10 10 0 14-17 18-17 26 0-8-17-12-17-26z'/><path d='M50 90c0-6 5-10 10-10 3 0 6 2 7 4 2-2 4-4 7-4 5 0 10 4 10 10 0 14-17 18-17 26 0-8-17-12-17-26z'/></g></svg>");
+    background-size:220px auto; background-repeat:repeat; background-attachment:fixed;
+  }
+
+  .card{
+    width:min(96vw, 980px);
+    background:var(--card); backdrop-filter:blur(3px);
+    border-radius:24px; padding:28px; box-shadow:var(--shadow);
+  }
+
+  h1{
+    margin:10px 0 6px; text-align:center; font-family:'Gagalin', 'Gill Sans','Trebuchet MS',sans-serif;
+    font-size:clamp(28px,4.6vw,40px);
+  }
+  .sub{
+    text-align:center; margin:0 0 24px; color:#b03a3a; letter-spacing:.5px;
+    font-weight:700; font-family:'Gagalin','Gill Sans','Trebuchet MS',sans-serif;
+    font-size:clamp(14px,2.6vw,18px);
+  }
+
+  .gifts{
+    display:grid; gap:22px;
+    grid-template-columns: repeat(3, minmax(200px,1fr));
+    align-items:center; justify-items:center;
+  }
+
+  .gift{
+    width:min(90%, 290px); aspect-ratio: 1/1; border-radius:18px;
+    background:#fff; box-shadow:0 8px 22px rgba(0,0,0,.12);
+    display:grid; place-items:center; position:relative; overflow:hidden;
+    cursor:pointer; transition:transform .06s ease, box-shadow .2s ease;
+  }
+  .gift:hover{ box-shadow:0 12px 30px rgba(0,0,0,.18); }
+  .gift:active{ transform:translateY(2px); }
+
+  /* --- ENVELOPE --- */
+  .envelope svg{ width:74%; height:auto; }
+
+  /* make the flap hinge at the top edge (slight 3D for realism) */
+  .flap { transform-origin:50% 36%; transform-box:fill-box; }
+  .envelope.open .flap{ animation: flapOpen 0.55s ease forwards; }
+  .envelope.fly .flap{ animation: flapFly 0.6s ease forwards; }
+
+  .flap-shadow{ opacity:0; transition:opacity .35s ease; }
+  .envelope.open .flap-shadow{ opacity:.28; }
+
+  @keyframes flapOpen{
+    0%{ transform: perspective(400px) rotateX(0deg); }
+    100%{ transform: perspective(400px) rotateX(180deg); }
+  }
+  @keyframes flapFly{
+    0%{ transform: perspective(400px) rotateX(180deg) translateY(0); opacity:1; }
+    100%{ transform: perspective(400px) rotateX(190deg) translateY(-60px); opacity:0; }
+  }
+
+  /* --- HEART + RIBBON --- */
+  .heart svg{ width:74%; height:auto; }
+  .ribbon-band{ transition: transform .7s ease, opacity .7s ease; transform-origin: center; }
+  .bow { transition: transform .7s ease, opacity .7s ease; transform-origin:center; }
+  .heart.open .ribbon-band{ transform: translateX(140%); opacity:0; }
+  .heart.open .bow{ transform: translateY(-120%) rotate(-25deg); opacity:0; }
+
+  /* --- BALLOON --- */
+  .balloon svg{ width:74%; height:auto; }
+  .balloon.open{ animation: floatAway 1.2s ease-in forwards; }
+  @keyframes floatAway{ to{ transform: translateY(-120vh) scale(1.05); opacity:.95; } }
+
+  /* Captions */
+  .cap{
+    position:absolute; bottom:10px; left:0; right:0; text-align:center; color:#444;
+    font-size:20px; letter-spacing:.3px; line-height:1;
+    font-family:'Brittany','Allura','Pacifico',cursive; /* Brittany script */
+  }
+
+  /* back link */
+  .back{
+    display:inline-block; margin:22px auto 4px; text-decoration:none; color:var(--accent); font-weight:700;
+    border:2px solid var(--accent); padding:10px 18px; border-radius:999px;
+  }
+  .back:hover{ color:#fff; background:var(--accent); }
+</style>
+</head>
+<body>
+  <div class="card">
+    <h1>💖 Our 3rd Anniversary Surprise 🎀</h1>
+    <p class="sub">Which gift are you opening first?🫶🎁</p>
+
+    <div class="gifts">
+
+      <!-- ENVELOPE -->
+      <div class="gift envelope" id="giftEnvelope" role="button" aria-label="Open letter">
+        <svg viewBox="0 0 220 180" xmlns="http://www.w3.org/2000/svg">
+          <!-- body -->
+          <rect x="20" y="40" rx="10" ry="10" width="180" height="120" fill="#ffeceb" stroke="#d9a2a2" stroke-width="3"/>
+          <!-- inner V -->
+          <path d="M20 60 L110 120 L200 60" fill="#ffd7d7" opacity=".75"/>
+          <!-- flap -->
+          <path class="flap" d="M20 40 L110 10 L200 40 L200 60 L20 60 Z" fill="#ffd2d2" stroke="#d9a2a2" stroke-width="3"/>
+          <!-- subtle shadow under flap -->
+          <rect class="flap-shadow" x="22" y="58" width="176" height="10" fill="#000" opacity=".2"/>
+          <!-- wax seal -->
+          <circle cx="110" cy="110" r="12" fill="#e94b4b" stroke="#c14040" stroke-width="3"/>
+          <text x="110" y="115" text-anchor="middle" font-size="10" fill="#fff" font-family="Arial">❤</text>
+        </svg>
+        <div class="cap">Letter</div>
+      </div>
+
+      <!-- HEART + RIBBON -->
+      <div class="gift heart" id="giftHeart" role="button" aria-label="Open flowers">
+        <svg viewBox="0 0 220 180" xmlns="http://www.w3.org/2000/svg">
+          <!-- heart -->
+          <path d="M110 160 C60 130 20 100 20 60 C20 33 41 15 66 15 C86 15 99 28 110 43 C121 28 134 15 154 15 C179 15 200 33 200 60 C200 100 160 130 110 160 Z"
+                fill="#ff8b9f" stroke="#d7677b" stroke-width="3"/>
+          <!-- vertical ribbon band -->
+          <rect class="ribbon-band" x="100" y="10" width="20" height="152" fill="#fff"/>
+          <!-- bow -->
+          <g class="bow" fill="#fff" stroke="#d9cfe0" stroke-width="2">
+            <circle cx="110" cy="82" r="9" fill="#fff"/>
+            <path d="M110 82 L86 66 Q82 80 88 92 Z"/>
+            <path d="M110 82 L134 66 Q138 80 132 92 Z"/>
+            <rect x="106" y="75" width="8" height="14" rx="2" ry="2" fill="#fff"/>
+          </g>
+        </svg>
+        <div class="cap">Flowers</div>
+      </div>
+
+      <!-- BALLOON -->
+      <div class="gift balloon" id="giftBalloon" role="button" aria-label="Open balloon surprise">
+        <svg viewBox="0 0 220 180" xmlns="http://www.w3.org/2000/svg">
+          <defs>
+            <linearGradient id="bGrad" x1="0" x2="0" y1="0" y2="1">
+              <stop offset="0" stop-color="#ff7a6e"/>
+              <stop offset="1" stop-color="#e94b4b"/>
+            </linearGradient>
+          </defs>
+          <ellipse cx="110" cy="70" rx="46" ry="56" fill="url(#bGrad)" stroke="#c44545" stroke-width="3"/>
+          <path d="M110 126 L106 134 L114 134 Z" fill="#c44545"/>
+          <!-- string -->
+          <path d="M110 134 C 108 146, 118 156, 110 168" fill="none" stroke="#7b6a6a" stroke-width="3"/>
+          <circle cx="96" cy="56" r="6" fill="#fff" opacity=".6"/>
+        </svg>
+        <div class="cap">Balloons</div>
+      </div>
+
+    </div>
+
+    <div style="text-align:center">
+      <a class="back" href="index.html">← Back</a>
+    </div>
+  </div>
+
+<script>
+  // Helper to play animation then navigate
+  function animateThenGo(el, className, url, delay=800){
+    el.classList.add(className);
+    setTimeout(()=>{ window.location.href = url; }, delay);
+  }
+
+  // Envelope: flap open then flap floats away, then go to letter.html
+  const env = document.getElementById('giftEnvelope');
+  env.addEventListener('click', () => {
+    env.classList.add('open');
+    // after flap opens, make it fly away
+    setTimeout(()=>{ env.classList.add('fly'); }, 560);
+    // navigate after the fly animation
+    setTimeout(()=>{ window.location.href = 'letter.html'; }, 1200);
+  });
+
+  // Heart ribbon loosens, then go to flowers.html
+  const heart = document.getElementById('giftHeart');
+  heart.addEventListener('click', () => {
+    animateThenGo(heart, 'open', 'flowers.html', 820);
+  });
+
+  // Balloon floats up, then go to balloon.html
+  const balloon = document.getElementById('giftBalloon');
+  balloon.addEventListener('click', () => {
+    animateThenGo(balloon, 'open', 'balloon.html', 1000);
+  });
+</script>
+</body>
+</html>
