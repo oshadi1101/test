@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Hello Cheran!!</title>
+
+  <!-- Local font faces (put actual font files into /fonts) -->
+  <style>
+    /* 1) Add your font files to: ./fonts/Gistecy.ttf and ./fonts/Gagalin.ttf */
+    @font-face {
+      font-family: 'Gistecy';
+      src: url('./fonts/Gistecy.ttf') format('truetype');
+      font-display: swap;
+    }
+    @font-face {
+      font-family: 'Gagalin';
+      src: url('./fonts/Gagalin.ttf') format('truetype');
+      font-display: swap;
+    }
+
+    :root{
+      --accent: #e94b4b;       /* red like the reference */
+      --ink: #111;             /* body text color */
+      --card: rgba(255,255,255,.88);
+      --shadow: 0 12px 32px rgba(17,17,17,.15);
+    }
+
+    /* Light pink hearts pattern (inline SVG) – works anywhere, no external images */
+    body{
+      margin:0; height:100svh; display:grid; place-items:center; color:var(--ink);
+      background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='160' height='120' viewBox='0 0 160 120'> <rect width='160' height='120' fill='white'/> <g fill='%23f9cfe0' opacity='0.9'> <path d='M20 30c0-7 6-12 12-12 4 0 7 2 9 5 2-3 5-5 9-5 6 0 12 5 12 12 0 16-21 21-21 31 0-10-21-15-21-31z'/> <path d='M100 20c0-6 5-10 10-10 3 0 6 2 7 4 2-2 4-4 7-4 5 0 10 4 10 10 0 14-17 18-17 26 0-8-17-12-17-26z'/> <path d='M50 90c0-6 5-10 10-10 3 0 6 2 7 4 2-2 4-4 7-4 5 0 10 4 10 10 0 14-17 18-17 26 0-8-17-12-17-26z'/> </g></svg>");
+      background-size: 220px auto; background-repeat: repeat; background-attachment: fixed;
+      font-family: system-ui, -apple-system, Segoe UI, Roboto, Ubuntu, Cantarell, 'Helvetica Neue', Arial, sans-serif;
+    }
+
+    .card{
+      width:min(92vw, 520px);
+      background:var(--card); backdrop-filter: blur(3px);
+      border-radius:24px; padding:34px 28px 28px; box-shadow:var(--shadow);
+      text-align:center;
+    }
+
+    .emoji{ font-size:56px; margin-bottom:8px; }
+
+    h1{ margin:0 0 2px; font-size:38px; font-weight:800; }
+    .cheran{ margin:6px 0 14px; font-size:52px; color:var(--accent); font-family:'Gistecy', 'Brush Script MT', 'Pacifico', cursive; }
+    .prompt{ margin:0 0 22px; font-size:20px; color:#333; font-family:'Gagalin', 'Gill Sans', 'Trebuchet MS', sans-serif; font-weight:400; }
+
+    .buttons{ display:flex; gap:16px; justify-content:center; flex-wrap:wrap; }
+    .btn{
+      padding:12px 22px; border-radius:999px; border:2px solid var(--accent);
+      background:transparent; color:var(--accent); font-weight:600; cursor:pointer; transition:transform .04s ease, background .2s ease, color .2s ease; box-shadow:0 2px 0 rgba(233,75,75,.35) inset;
+    }
+    .btn:active{ transform:translateY(1px); }
+    .btn:hover{ background:var(--accent); color:#fff; }
+  </style>
+</head>
+<body>
+  <main class="card">
+    <div class="emoji">🐱</div>
+    <h1>Hello</h1>
+    <div class="cheran">Cheran!!</div>
+    <p class="prompt">Do you want to see your gift?</p>
+    <div class="buttons">
+      <button class="btn" onclick="yesClicked()">YES PLEASE</button>
+      <button class="btn" onclick="noClicked()">NO THANKS</button>
+    </div>
+  </main>
+
+  <script>
+    function yesClicked(){
+      // Go to yes page
+      window.location.href = 'yes.html';
+    }
+
+    function noClicked(){
+      // Go to no-thanks page
+      window.location.href = 'no-thanks.html';
+    }
+  </script>
+</body>
+</html>

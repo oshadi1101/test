@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Flowers for You</title>
+<style>
+  :root{
+    --bg:#08090c;         /* deep black-ish */
+    --stem:#38e08b;       /* neon green */
+    --leaf:#1fd176;       /* leaf green */
+    --petal1:#ffb3c7;     /* pink */
+    --petal2:#ffd36e;     /* peach */
+    --petal3:#b0a9ff;     /* lilac */
+    --center:#fff3a8;     /* flower center */
+    --glow: drop-shadow(0 0 10px rgba(255,255,255,.35)) drop-shadow(0 0 28px rgba(255,160,220,.25));
+  }
+  @font-face{ font-family:'Brittany'; src:url('./fonts/Brittany.ttf') format('truetype'); font-display:swap; }
+  .title{
+    position:absolute; top:22px; left:50%; transform:translateX(-50%);
+    color:#ffd6e6; text-shadow:0 2px 10px rgba(255,120,170,.35);
+    font-family:'Brittany', 'Allura', cursive; font-size:clamp(24px,4.2vw,44px); font-weight:600;
+    letter-spacing:.5px; z-index:6; white-space:nowrap;
+  }
+  *{box-sizing:border-box}
+  html,body{height:100%}
+  body{
+    margin:0; background:var(--bg); color:#fff; font-family: system-ui,-apple-system,Segoe UI,Roboto,'Helvetica Neue',Arial,sans-serif;
+    overflow:hidden; display:grid; place-items:center;
+  }
+  .stage{ position:relative; width:min(100vw, 900px); height:min(90vh, 640px); margin-top: 40px; }
+  .bouquet{
+    position:absolute; left:50%; top:52%; transform:translate(-50%,-50%);
+    width:min(42vw, 420px); height:auto; filter: var(--glow);
+    animation: scaleIn .9s ease-out forwards; opacity:0; transform-origin:center;
+    z-index:4;
+  }
+  svg{ width:100%; height:100%; display:block; filter: var(--glow); }
+
+  /* --- Grow animations --- */
+  .growY{ transform-origin: 50% 100%; animation: growY 2.2s ease-out forwards; transform: scaleY(0); }
+  .growY.d2{ animation-delay:.2s }
+  .growY.d4{ animation-delay:.4s }
+  .growY.d6{ animation-delay:.6s }
+  .scaleIn{ transform-origin: 50% 50%; transform: scale(.2); opacity:0; animation: scaleIn .9s ease-out forwards; }
+  .scaleIn.d8{ animation-delay:.8s }
+  .scaleIn.d10{ animation-delay:1s }
+  .scaleIn.d12{ animation-delay:1.2s }
+
+  @keyframes growY{ to{ transform: scaleY(1);} }
+  @keyframes scaleIn{ 50%{opacity:1} to{ transform: scale(1); opacity:1} }
+
+  /* Leaves gentle sway */
+  .sway{ transform-origin: 50% 100%; animation: sway 4.5s ease-in-out infinite; }
+  @keyframes sway{ 0%,100%{ transform: rotate(0deg)} 50%{ transform: rotate(3.5deg)} }
+
+  /* Pot and tag */
+  .potShadow{ filter: drop-shadow(0 12px 24px rgba(0,0,0,.7)); }
+  .tagText{ font-size:14px; fill:#111; font-weight:800; letter-spacing:.2px; }
+
+  /* Back button */
+  .back{
+    position:absolute; left:50%; bottom:18px; transform:translateX(-50%); z-index:5;
+    background:#ff84b0; color:#fff; border:none;
+    padding:14px 24px; border-radius:999px; text-decoration:none; backdrop-filter: blur(6px);
+    transition: filter .2s ease, transform .05s ease; font-weight:800; font-size:16px;
+    box-shadow:0 10px 24px rgba(255,132,176,.35);
+  }
+  .back:hover{ filter: brightness(1.08); }
+  .back:active{ transform: translate(-50%, 1px); }
+
+  .hearts{ position:absolute; inset:0; pointer-events:none; overflow:hidden; }
+  /* Real heart shape: a square rotated -45deg with two circles on top */
+  .heart{
+    position:absolute;
+    width:16px; height:16px;               /* JS will override size inline */
+    background: currentColor;
+    transform: translate(-50%, 0) rotate(-45deg);
+    animation: rise 5.2s linear forwards;  /* a touch slower */
+    opacity:.9;
+    color:#ff84b0;
+    filter: drop-shadow(0 0 6px rgba(255,132,176,.6));
+  }
+  .heart::before, .heart::after{
+    content:""; position:absolute; width:100%; height:100%;
+    background: currentColor; border-radius:50%;
+  }
+  .heart::before{ top:-50%; left:0; }
+  .heart::after{ top:0; left:50%; }
+
+  /* Rise while gently changing angle */
+  @keyframes rise{
+    0%   { transform: translate(-50%, 0) rotate(-45deg);   opacity:.95; }
+    50%  { transform: translate(-50%, -260px) rotate(-43deg); opacity:.85; }
+    100% { transform: translate(-50%, -520px) rotate(-47deg); opacity:0; }
+  }
+
+</style>
+</head>
+<body>
+  <a class="back" href="yes.html">← Back to gifts</a>
+  <h1 class="title">For Cheran — a little bouquet from Oshadi 🌹</h1>
+  <div class="stage">
+    <div class="hearts" id="hearts"></div>
+
+    <!-- Inline HEART BOUQUET (no image file needed) -->
+    <svg viewBox="0 0 900 640" xmlns="http://www.w3.org/2000/svg" aria-label="growing flowers">
+      <defs>
+        <radialGradient id="rosePink" cx="50%" cy="45%" r="60%">
+          <stop offset="0%" stop-color="#ffe3ec"/>
+          <stop offset="60%" stop-color="#ffb3c7"/>
+          <stop offset="100%" stop-color="#ff82a6"/>
+        </radialGradient>
+        <radialGradient id="rosePeach" cx="50%" cy="45%" r="60%">
+          <stop offset="0%" stop-color="#fff2ce"/>
+          <stop offset="60%" stop-color="#ffd36e"/>
+          <stop offset="100%" stop-color="#ffb45e"/>
+        </radialGradient>
+        <radialGradient id="roseLilac" cx="50%" cy="45%" r="60%">
+          <stop offset="0%" stop-color="#efeaff"/>
+          <stop offset="60%" stop-color="#c8bfff"/>
+          <stop offset="100%" stop-color="#a89bff"/>
+        </radialGradient>
+      </defs>
+      <!-- Ground glow -->
+      <ellipse cx="450" cy="560" rx="280" ry="36" fill="#3cffb41a"/>
+
+      <g transform="translate(450 360)">
+        <g class="scaleIn d8" filter="drop-shadow(0 6px 20px rgba(255,140,180,.35))">
+          <!-- cone wrapper -->
+          <g transform="translate(0,120) rotate(180)">
+    <path d="M -70 -20 L 0 -220 L 70 -20 Z" fill="#cfe2ff" stroke="#a8c4ff" stroke-width="3"/>
+    <!-- wrap band + centered bow -->
+    <rect x="-56" y="-126" width="112" height="14" rx="7" fill="#ff99bb" stroke="#ff7aa6" stroke-width="3"/>
+    <g>
+      <circle cx="0" cy="-119" r="9" fill="#ff7aa6"/>
+      <path d="M -8 -119 C -46 -145 -50 -103 -16 -110 Z" fill="#ff99bb" stroke="#ff7aa6" stroke-width="3"/>
+      <path d="M 8 -119 C 46 -145 50 -103 16 -110 Z" fill="#ff99bb" stroke="#ff7aa6" stroke-width="3"/>
+      <path d="M -10 -112 C -16 -134 -20 -156 -12 -176" stroke="#ff7aa6" stroke-width="5" fill="none"/>
+      <path d="M 10 -112 C 16 -134 20 -156 12 -176" stroke="#ff7aa6" stroke-width="5" fill="none"/>
+    </g>
+  </g>
+
+          <!-- helper: heart symbol as reusable path -->
+          <defs>
+            <path id="h" d="M0 -18 C -14 -34 -36 -8 0 16 C 36 -8 14 -34 0 -18 Z" />
+          </defs>
+
+          <!-- single green branch behind the hearts -->
+          <g opacity=".95">
+            <!-- central stem -->
+            <path d="M0,70 C 0,36 0,-6 0,-36" stroke="#28c47f" stroke-width="6" fill="none"/>
+            <!-- spread leaves (not touching the stem) -->
+            <ellipse cx="-28" cy="34" rx="18" ry="10" fill="#2fd38b"/>
+            <ellipse cx="28" cy="28" rx="18" ry="10" fill="#2fd38b"/>
+            <ellipse cx="-22" cy="10" rx="16" ry="9" fill="#22b874"/>
+            <ellipse cx="24" cy="6" rx="16" ry="9" fill="#22b874"/>
+            <ellipse cx="-16" cy="-16" rx="14" ry="8" fill="#1fc97f"/>
+            <ellipse cx="16" cy="-18" rx="14" ry="8" fill="#1fc97f"/>
+          </g>
+
+          <!-- hearts rising out of the cone - denser bouquet -->
+          <g transform="translate(0,-120)">
+            <!-- top crown -->
+            <g fill="#ff88a8" stroke="#e56a95" stroke-width="3">
+              <use href="#h" transform="translate(0,-56) scale(1.35)"/>
+              <use href="#h" transform="translate(-34,-38) scale(1.05)"/>
+              <use href="#h" transform="translate(34,-38) scale(1.05)"/>
+            </g>
+            <!-- ring 1 -->
+            <g fill="#ff6f95" stroke="#de5a86" stroke-width="3">
+              <use href="#h" transform="translate(-64,-6) scale(1.18)"/>
+              <use href="#h" transform="translate(-32,-2) scale(1.1)"/>
+              <use href="#h" transform="translate(32,-2) scale(1.1)"/>
+              <use href="#h" transform="translate(64,-6) scale(1.18)"/>
+            </g>
+            <!-- ring 2 -->
+            <g fill="#ff7fa6" stroke="#e56a95" stroke-width="3">
+              <use href="#h" transform="translate(-92,28) scale(1.02)"/>
+              <use href="#h" transform="translate(-60,32) scale(1.06)"/>
+              <use href="#h" transform="translate(0,30) scale(1.12)"/>
+              <use href="#h" transform="translate(60,32) scale(1.06)"/>
+              <use href="#h" transform="translate(92,28) scale(1.02)"/>
+            </g>
+            <!-- ring 3 (lower, smaller) -->
+            <g fill="#ff96b8" stroke="#e56a95" stroke-width="3">
+              <use href="#h" transform="translate(-70,64) scale(.92)"/>
+              <use href="#h" transform="translate(-36,70) scale(.96)"/>
+              <use href="#h" transform="translate(36,70) scale(.96)"/>
+              <use href="#h" transform="translate(70,64) scale(.92)"/>
+            </g>
+            <!-- sprinkle extras for fullness -->
+            <g fill="#ffa3c6" stroke="#e56a95" stroke-width="3" opacity=".95">
+              <use href="#h" transform="translate(-18,6) scale(.9)"/>
+              <use href="#h" transform="translate(18,6) scale(.9)"/>
+              <use href="#h" transform="translate(-50,48) scale(.85)"/>
+              <use href="#h" transform="translate(50,48) scale(.85)"/>
+              <use href="#h" transform="translate(0,64) scale(.8)"/>
+            </g>
+          </g>
+        </g>
+      </g>
+    </svg>
+  </div>
+
+<script>
+  // Floating hearts across the whole scene
+  const box = document.getElementById('hearts');
+  const colors = ['#ff84b0','#ffd36e','#b0a9ff','#89e3ff','#ffa8d6','#a5ffcf'];
+  function spawnHeart(){
+    const h = document.createElement('span');
+    h.className = 'heart';
+    const x = 5 + Math.random()*90; // anywhere across width
+    const delay = Math.random()*1.2;
+    const size = 12 + Math.random()*16;
+    h.style.left = x + '%';
+    h.style.bottom = (2 + Math.random()*8) + '%';
+    h.style.animationDelay = delay + 's';
+    h.style.width = h.style.height = size + 'px';
+    h.style.color = colors[(Math.random()*colors.length)|0];
+    box.appendChild(h);
+    setTimeout(()=> h.remove(), 5000);
+  }
+  // More hearts, more fun
+  for(let i=0;i<12;i++){ setTimeout(spawnHeart, i*220); }
+  setInterval(spawnHeart, 400);
+</script>
+</body>
+</html>
